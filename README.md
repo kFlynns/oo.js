@@ -11,9 +11,9 @@ Released under the MIT license
 - automatic creation of getter- and setter methods for properties
 - getter and setter can be overwritten as all members
 - inheritance of classes
-- polymorphism, children can bea threaded as it's parent(s)
+- polymorphism, children can be threaded as it's parent(s)
 - automatic collection of all instances in a container
-- identifying instances via an automatic id
+- identifying instances by an automatic id
 - create singleton objects
 - execute the parents version of overwritten methods on actual context
 
@@ -37,7 +37,7 @@ Released under the MIT license
 
 # Methods of any oo.js instance
 - automatic getter and setter, each property get this  
-**instance.getXxx()) / .setXxx()**
+**instance.getXxx() / .setXxx()**
 
 - execute original methode on parent if it be overwritten  
 **instance.execParent(string:methodName, array:params)**
