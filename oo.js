@@ -14,12 +14,11 @@ function oojsInit(global) {
     
     window[global] = window[global] || {
 
-
         /* holding all instances of objects */
         instances: {},
         
         /* create a new instantiable class */
-        new: function(className, members, Parent) {
+        create: function(className, members, Parent) {
             
             let newClass = (function(className) {
                 
@@ -92,7 +91,6 @@ function oojsInit(global) {
                     {
                         return true;
                     }
-
                     parent = parent.__parent;
                 }
 
@@ -142,7 +140,6 @@ function oojsInit(global) {
             /* fill the members, setter and getter in the prototype */
             for(let member in members)
             {
-                
                 newClass.prototype[member] = members[member];
 
                 if(typeof newClass.prototype[member] !== 'function')
@@ -159,7 +156,6 @@ function oojsInit(global) {
                             this[link] = value;
                         };
                     })();
-
 
                     newClass.prototype['get' + property] = (function() {
                         let link = member;
@@ -195,9 +191,3 @@ function oojsInit(global) {
         
     };
 }
-
-(function() {
-    window.dispatchEvent(new CustomEvent(
-        'ooJsLoaded', {
-    }));
-})();
