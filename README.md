@@ -8,12 +8,12 @@ Released under the MIT license
 
 # Features
 - creating instances of "classes"
-- automatic creation of getter- and setter methods for propertys
+- automatic creation of getter- and setter methods for properties
 - getter and setter can be overwritten as all members
 - inheritance of classes
-- polymorphism, childs can bea threated as it's parent(s)
+- polymorphism, children can bea threaded as it's parent(s)
 - automatic collection of all instances in a container
-- identifiing instances via an automatic id
+- identifying instances via an automatic id
 - create singleton objects
 - execute the parents version of overwritten methods on actual context
 
@@ -24,13 +24,13 @@ Released under the MIT license
 - inherite from parent (will be available under oojs.ClassName)  
 **oojs.inherit(oojsObject:parent, string:ClassName, object:members)**
 
-- create singleton object (will be available under oojs.ClassName but allready as instance  
+- create singleton object (will be available under oojs.ClassName but already as instance  
 **oojs.makeSingleton(string:ClassName, object:members, object:parameter)**
 
 - all objects that was instantiated with new  
 **oojs.getInstances()**
 
-- create anonym instance (will not be tracked by oo.js for regular garbage collector) by passing "anoym: true" in the parameters  
+- create anonymous instance (will not be tracked by oo.js for regular garbage collector) by passing "anoym: true" in the parameters  
 **var anonymInstance = new oojs.Employee({
   anonym: true
 });**
