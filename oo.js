@@ -175,12 +175,12 @@ function oojsInit(global) {
         /* create a new instantiable class and inherit from a given parent */
         inherit: function(Parent, className, members)
         {
-            this.new(className, members, Parent);
+            this.create(className, members, Parent);
         },
 
         /* create a new instance of a class and put it on the global identifier */
         makeSingleton: function(className, members, params) {
-            this.new(className, members);
+            this.create(className, members);
             this[className] = new this[className](params);
         },
 
