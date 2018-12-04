@@ -16,6 +16,7 @@ Released under the MIT license
 - identifying instances by an automatic id
 - create singleton objects
 - execute the parents version of overwritten methods on actual context
+- container for arranging all instances with filtering, interrating, deleting them
 
 # Methods of oo.js
 - create new class (will be available under oojs.ClassName)  
@@ -27,8 +28,17 @@ Released under the MIT license
 - create singleton object (will be available under oojs.ClassName but already as instance  
 **oojs.makeSingleton(string:ClassName, object:members, object:parameter)**
 
-- all objects that was instantiated with new  
+- loop over all instances of a specific class
+**oojs.each(string:className, Function:callback, Object:context[optional])**
+
+- loop over instances of a specific class that matches with the given filter
+**oojs.filter(string:className, Object:filter, Function:callback, Object:context[optional])**
+ 
+- get all objects that was instantiated with new grouped by their class name
 **oojs.getInstances()**
+
+- get all objetcs as a hydrated list
+**oojs.getHydratedInstances()**
 
 - create anonymous instance (will not be tracked by oo.js for regular garbage collector) by passing "anoym: true" in the parameters  
 **var anonymInstance = new oojs.Employee({
