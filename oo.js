@@ -7,8 +7,9 @@
  *
  */
 "use strict";
-/* 
+/**
  * init the oojs-object under given identifier 'global'
+ * @param {string} global
  */
 function oojsInit(global) {
     
@@ -16,8 +17,13 @@ function oojsInit(global) {
 
         /* holding all instances of objects */
         instances: {},
-        
-        /* create a new instantiable class */
+
+        /**
+         * create a new instantiable class
+         * @param {string} className
+         * @param {Object} members
+         * @param {Function} Parent
+         */
         create: function(className, members, Parent) {
             
             let newClass = (function(className) {
@@ -87,8 +93,12 @@ function oojsInit(global) {
                     return this.__parent;
                 };
             }
-            
-            /* return true if actual object or it's parents are an instance of the given class name  */
+
+            /**
+             * return true if actual object or it's parents are an instance of the given class name
+             * @param {string} className
+             * @returns {boolean}
+             */
             newClass.prototype.isInstanceOf = function(className) {
                 
                 if(this.className === className)
@@ -110,7 +120,10 @@ function oojsInit(global) {
                 return false;
             };
 
-            /* copies all properties of an object in this instance if properties are defined */
+            /**
+             * copies all properties of an object in this instance if properties are defined
+             * @param {Object} params
+             */
             newClass.prototype.copyDataFrom = function(params)
             {
 
@@ -125,7 +138,9 @@ function oojsInit(global) {
                 }
             };
 
-            /*  delete registered instance */
+            /**
+             * delete registered instance
+             */
             newClass.prototype.destroy = function() {
 
                 window[global].instances[this.className][this.objectId] = null;
@@ -173,12 +188,18 @@ function oojsInit(global) {
                 }
                  
             }
-            
+
+            // save
             this[className] = newClass;
 
         },
 
-        /* iterate over container for a specific class */
+        /**
+         * iterate over container for a specific class
+         * @param {string} className
+         * @param {Function} callback
+         * @param {Object} context
+         */
         each: function(className, callback, context)
         {
             for(let objectId in this.instances[className])
@@ -192,14 +213,19 @@ function oojsInit(global) {
             }
         },
 
-        /* iterate over container for a specific class */
+        /**
+         * iterate over container for a specific class
+         * @param {string} className
+         * @param {Object} filter
+         * @param {Function} callback
+         * @param {Object} context
+         */
         filter: function(className, filter, callback, context)
         {
             for(let objectId in this.instances[className])
             {
 
                 let matchFilter = true;
-
                 for(let property in filter)
                 {
                     if(this.instances[className][objectId][property] !== filter[property])
@@ -222,24 +248,40 @@ function oojsInit(global) {
             }
         },
 
-        /* create a new instantiable class and inherit from a given parent */
+        /**
+         * create a new instantiable class and inherit from a given parent
+         * @param {Function} Parent
+         * @param {string} className
+         * @param {Object} members
+         */
         inherit: function(Parent, className, members)
         {
             this.create(className, members, Parent);
         },
 
-        /* create a new instance of a class and put it on the global identifier */
+        /**
+         * create a new instance of a class and put it on the global identifier
+         * @param {string} className
+         * @param {Object} members
+         * @param {Object} params
+         */
         makeSingleton: function(className, members, params) {
             this.create(className, members);
             this[className] = new this[className](params);
         },
 
-        /* return all instances that was created */
+        /**
+         * return all instances that was created
+         *
+         */
         getInstances: function() {
             return this.instances;
         },
 
-        /* return all instances that was created as one list */
+        /**
+         * return all instances that was created as one list
+         * @returns {}
+         */
         getHydratedInstances: function() {
 
             let list = {};
