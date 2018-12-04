@@ -77,7 +77,7 @@ function oojsInit(global) {
                     isParent: true
                 });
                 
-                /* original Parent for exucting parent-methods on actuel object */
+                /* original Parent for exucting parent-methods on actual object */
                 newClass.prototype.__parent = new Parent({
                     anonym: true,
                     isParent: true
@@ -128,7 +128,6 @@ function oojsInit(global) {
             {
 
                 if(!params) return;
-                
                 for(let property in params)
                 {
                     if(typeof this[property] !== 'undefined')
@@ -272,7 +271,7 @@ function oojsInit(global) {
 
         /**
          * return all instances that was created
-         *
+         * @returns {instances|{}}
          */
         getInstances: function() {
             return this.instances;
