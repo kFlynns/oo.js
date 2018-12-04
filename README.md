@@ -34,10 +34,10 @@ Released under the MIT license
 - loop over instances of a specific class that matches with the given filter
 **oojs.filter(string:className, Object:filter, Function:callback, Object:context[optional])**
  
-- get all objects that was instantiated with new grouped by their class name
+- get all objects that was instantiated with new grouped by their class name  
 **oojs.getInstances()**
 
-- get all objetcs as a hydrated list
+- get all objetcs as a hydrated list  
 **oojs.getHydratedInstances()**
 
 - create anonymous instance (will not be tracked by oo.js for regular garbage collector) by passing "anoym: true" in the parameters  
