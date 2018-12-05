@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>oo.js - container</title>
+    <script src="../oo.js"></script>
+    <script>oojsInit('oojs');</script>
+</head>
+<body>
+<strong>Open console with F12.</strong>
+<script>
+
+    // definitions
+    oojs.create('Employee', {
+        name: null,
+        age: null,
+        __init: function(props) {
+            this.copyDataFrom(props);
+        }
+    });
+
+    oojs.create('Company', {
+        name: null,
+        __init: function(props) {
+            this.copyDataFrom(props);
+        }
+    });
+
+
+    // create instances
+    new oojs.Employee({
+        name: 'Bob',
+        age: 45
+    });
+
+    new oojs.Employee({
+        name: 'Susan',
+        age: 34
+    });
+
+    new oojs.Employee({
+        name: 'Sandy',
+        age: 45
+    });
+
+    new oojs.Company({
+        name: 'Bob\'s IT Service'
+    });
+
+
+    // get all
+    console.log('All Employees:');
+    console.log(
+      oojs.getEmployees()
+    );
+
+
+    // iterating over
+    console.log('Loop over:');
+    oojs.each('Employee', function(employee) {
+        console.log(employee);
+    });
+
+
+    // filtering
+    console.log('Search for age 45:');
+    oojs.filter('Employee', {
+        age: 45
+    }, function(employee) {
+        console.log(employee);
+    });
+
+
+    // get all instances grouped by class
+    console.log('Get all instances grouped by class:');
+    console.log(
+        oojs.getInstances()
+    );
+
+
+    // get all instances hydrated
+    console.log('Get all instances hydrated:');
+    console.log(
+        oojs.getHydratedInstances()
+    );
+
+</script>
+</body>
+</html>

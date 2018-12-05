@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>oo.js - basic</title>
+    <script src="../oo.js"></script>
+    <script>oojsInit('oojs');</script>
+</head>
+<body>
+<strong>Open console with F12.</strong>
+<script>
+
+    // definitions
+    oojs.create('Employee', {
+        name: null,
+        age: null,
+        __init: function(props) {
+            this.copyDataFrom(props);
+        },
+        getLabel: function() {
+            return 'Name: ' + this.name + ', age: ' + this.age + '.';
+        }
+    });
+
+    // creation
+    var bob = new oojs.Employee({
+        name: 'Bob',
+        age: 34
+    });
+
+    // bob as he was created
+    console.log('Bob as he was created:');
+    console.log(
+        bob
+    );
+
+    // automatic generated setter
+    bob.setAge(35);
+    console.log('Setting ha age via setAge():');
+    console.log(
+        bob
+    );
+
+    // instance method
+    console.log('Calling bob.getLabel():');
+    console.log(
+        bob.getLabel()
+    );
+
+</script>
+</body>
+</html>
