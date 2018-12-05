@@ -33,11 +33,7 @@ function oojsInit(global) {
                 /* constructor calls init if possible */
                 return function(params) {
 
-                    if(typeof params === 'undefined')
-                    {
-                        params = {};
-                    }
-
+                    if(typeof params === 'undefined') params = {};
                     this.className = className;
 
                     if(typeof this.__init !== 'undefined' && !params.isParent)
@@ -50,31 +46,14 @@ function oojsInit(global) {
                     /* put instance in container */
                     if(!params.anonym)
                     {
-
                         this.objectId = className + '_' + (objectId++).toString();
-
-                        if(
-                            typeof window[global].instances[className] === 'undefined'
-                        ) {
-                            window[global].instances[className] = {};
-                        }
-
                         window[global].instances[className][this.objectId] = this;
-
-                        if(typeof window[global]['get' + className + 's'] === 'undefined')
-                        {
-                            window[global]['get' + className + 's'] = (function(global, className) {
-                                return function() {
-                                    return  window[global].instances[className];
-                                };
-                            })(global, className);
-                        }
-
                     }
 
                 };
 
             })(className);
+
 
             /* inheriting if Parent is given */
             if(typeof Parent !== 'undefined')
@@ -158,14 +137,15 @@ function oojsInit(global) {
                 {
                     this[member] = null;
                 }
+                /*
+                                window.setTimeout((function(toDelete) {
+                                    console.log(toDelete);
+                                    return function() {
+                                        toDelete = null;
+                                    };
 
-                window.setTimeout((function(toDelete) {
-                    return function() {
-                        toDelete = null;
-                    };
-
-                })(this), 1);
-
+                                })(this), 1);
+                */
             };
 
             /* fill the members, setter and getter in the prototype */
@@ -199,6 +179,22 @@ function oojsInit(global) {
 
             // save
             this[className] = newClass;
+
+            /* create empty container */
+            if(typeof this.instances[className] === 'undefined')
+            {
+                this.instances[className] = {};
+            }
+
+            /* getter for class container */
+            if(typeof this['get' + className + 's'] === 'undefined')
+            {
+                this['get' + className + 's'] = (function(className) {
+                    return function() {
+                        return this.instances[className];
+                    };
+                })(className);
+            }
 
         },
 
