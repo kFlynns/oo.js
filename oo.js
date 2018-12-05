@@ -12,7 +12,7 @@
  * @param {string} global
  */
 function oojsInit(global) {
-    
+
     window[global] = window[global] || {
 
         /* holding all instances of objects */
@@ -25,19 +25,19 @@ function oojsInit(global) {
          * @param {Function} Parent
          */
         create: function(className, members, Parent) {
-            
+
             let newClass = (function(className) {
-                
+
                 let objectId = 0;
-                
+
                 /* constructor calls init if possible */
                 return function(params) {
-                    
+
                     if(typeof params === 'undefined')
                     {
                         params = {};
                     }
-                    
+
                     this.className = className;
 
                     if(typeof this.__init !== 'undefined' && !params.isParent)
@@ -61,10 +61,19 @@ function oojsInit(global) {
 
                         window[global].instances[className][this.objectId] = this;
 
+                        if(typeof window[global]['get' + className + 's'] === 'undefined')
+                        {
+                            window[global]['get' + className + 's'] = (function(global, className) {
+                                return function() {
+                                    return  window[global].instances[className];
+                                };
+                            })(global, className);
+                        }
+
                     }
-                    
+
                 };
-                
+
             })(className);
 
             /* inheriting if Parent is given */
@@ -76,7 +85,7 @@ function oojsInit(global) {
                     anonym: true,
                     isParent: true
                 });
-                
+
                 /* original Parent for exucting parent-methods on actual object */
                 newClass.prototype.__parent = new Parent({
                     anonym: true,
@@ -85,9 +94,9 @@ function oojsInit(global) {
 
                 /* for executing parents version of a methode at tha actual instance */
                 newClass.prototype.execParent = function(methode, args) {
-                    this.__parent[methode].apply(this, args);                    
+                    this.__parent[methode].apply(this, args);
                 };
-                
+
                 /* return parent */
                 newClass.prototype.getParent = function() {
                     return this.__parent;
@@ -100,14 +109,14 @@ function oojsInit(global) {
              * @returns {boolean}
              */
             newClass.prototype.isInstanceOf = function(className) {
-                
+
                 if(this.className === className)
                 {
                     return true;
                 }
-                
+
                 let parent = this.__parent;
-                
+
                 while(typeof parent !== 'undefined')
                 {
                     if(parent.className === className)
@@ -154,11 +163,11 @@ function oojsInit(global) {
                     return function() {
                         toDelete = null;
                     };
-                    
+
                 })(this), 1);
-                
+
             };
-            
+
             /* fill the members, setter and getter in the prototype */
             for(let member in members)
             {
@@ -168,10 +177,10 @@ function oojsInit(global) {
                 {
 
                     let property = member
-                        .charAt(0)
-                        .toUpperCase() +
+                            .charAt(0)
+                            .toUpperCase() +
                         member.slice(1);
-                    
+
                     newClass.prototype['set' + property] = (function(member) {
                         return function(value) {
                             this[member] = value;
@@ -183,9 +192,9 @@ function oojsInit(global) {
                             return this[member];
                         };
                     })(member);
-                    
+
                 }
-                 
+
             }
 
             // save
@@ -293,6 +302,6 @@ function oojsInit(global) {
             }
             return list;
         }
-        
+
     };
 }
