@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>oo.js - inherit</title>
+    <script src="../oo.js"></script>
+    <script>oojsInit('oojs');</script>
+</head>
+<body>
+<strong>Open console with F12.</strong>
+<script>
+
+    // definitions
+    oojs.create('Human', {
+        name: null,
+        age: null,
+        __init: function(props) {
+            this.copyDataFrom(props);
+        },
+        getLabel: function() {
+            return 'Name: ' + this.name + ', age: ' + this.age + '.';
+        }
+    });
+
+    oojs.inherit(oojs.Human, 'Employee', {
+        job: null,
+        getLabel: function() {
+            return 'Name: ' + this.name + ', age: ' + this.age + ', Job: ' + this.job + '.';
+        }
+    });
+
+
+    // creation
+    var bob = new oojs.Employee({
+        name: 'Bob',
+        age: 34,
+        job: 'welder'
+    });
+
+    console.log(bob.getLabel());
+
+
+    // what is if the child override a useful parent method like __init?
+    oojs.inherit(oojs.Human, 'Boss', {
+
+        job: null,
+
+        __init: function(props) {
+
+            console.log('New boss was created.');
+
+            // for executing a parent's method (parent's __init fill the data in):
+            this.execParent('__init', [props])
+        },
+
+        getLabel: function() {
+            return 'Name: ' + this.name + ', age: ' + this.age + ', Job: ' + this.job + '.';
+        }
+    });
+
+    // creation
+    var mark = new oojs.Boss({
+        name: 'Mark',
+        age: 64,
+        job: 'boss'
+    });
+
+    console.log(mark.getLabel());
+
+
+</script>
+</body>
+</html>
