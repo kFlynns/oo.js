@@ -34,7 +34,9 @@ function oojsInit(global) {
                 return function(params) {
 
                     if(typeof params === 'undefined') params = {};
+
                     this.className = className;
+                    this.objectId = className + '_' + (objectId++).toString();
 
                     if(typeof this.__init !== 'undefined' && !params.isParent)
                     {
@@ -46,8 +48,13 @@ function oojsInit(global) {
                     /* put instance in container */
                     if(!params.anonym)
                     {
-                        this.objectId = className + '_' + (objectId++).toString();
+
                         window[global].instances[className][this.objectId] = this;
+                        /* ref for find object as parent */
+                        if(typeof this.__parent !== 'undefined')
+                        {
+                            window[global].instances[this.__parent.className][this.objectId] = this;
+                        }
                     }
 
                 };
@@ -133,19 +140,17 @@ function oojsInit(global) {
                 window[global].instances[this.className][this.objectId] = null;
                 delete window[global].instances[this.className][this.objectId];
 
+                if(typeof this.__parent !== 'undefined')
+                {
+                    window[global].instances[this.__parent.className][this.objectId] = null;
+                    delete window[global].instances[this.__parent.className][this.objectId];
+                }
+
                 for(let member in this)
                 {
                     this[member] = null;
                 }
-                /*
-                                window.setTimeout((function(toDelete) {
-                                    console.log(toDelete);
-                                    return function() {
-                                        toDelete = null;
-                                    };
 
-                                })(this), 1);
-                */
             };
 
             /* fill the members, setter and getter in the prototype */
@@ -179,6 +184,7 @@ function oojsInit(global) {
 
             // save
             this[className] = newClass;
+
 
             /* create empty container */
             if(typeof this.instances[className] === 'undefined')
