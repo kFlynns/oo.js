@@ -33,28 +33,45 @@ function oojsInit(global) {
                 /* constructor calls init if possible */
                 return function(params) {
 
-                    if(typeof params === 'undefined') params = {};
-
                     this.className = className;
                     this.objectId = className + '_' + (objectId++).toString();
-
-                    if(typeof this.__init !== 'undefined' && !params.isParent)
-                    {
-                        this.__init(
-                            params
-                        );
-                    }
+                    if(typeof params === 'undefined') params = {};
 
                     /* put instance in container */
                     if(!params.anonym)
                     {
 
                         window[global].instances[className][this.objectId] = this;
-                        /* ref for find object as parent */
-                        if(typeof this.__parent !== 'undefined')
+
+                        /* ref for find object as all its parent's class names */
+                        if(typeof this.__parents !== 'undefined')
                         {
-                            window[global].instances[this.__parent.className][this.objectId] = this;
+                            for(let i = 0; i < this.__parents.length; i++)
+                            {
+                                window[global].instances[this.__parents[i].className][this.objectId] = this;
+                            }
                         }
+
+                    }
+
+                    /*  for referring the first parent quickly */
+                    if(typeof this.__parents !== 'undefined')
+                    {
+                        this.__inheritLevel = this.__parents.length;
+
+                        for(let i = 0; i < this.__parents.length; i++)
+                        {
+                            if(this.__parents[i].className === className)
+                            {
+                                this.__inheritLevel = i;
+                            }
+                        }
+                    }
+
+                    /* execute init */
+                    if(typeof this.__init !== 'undefined' && !params.isParent)
+                    {
+                        this.__init(params);
                     }
 
                 };
@@ -72,22 +89,55 @@ function oojsInit(global) {
                     isParent: true
                 });
 
-                /* original Parent for exucting parent-methods on actual object */
-                newClass.prototype.__parent = new Parent({
+
+                /* holds all parents that was inherited */
+                if(typeof newClass.prototype.__parents === 'undefined')
+                {
+                    newClass.prototype.__parents = [];
+                }
+
+                /* create and push to actual parent */
+                newClass.prototype.__parents.push(new Parent({
                     anonym: true,
                     isParent: true
-                });
+                }));
 
-                /* for executing parents version of a methode at tha actual instance */
-                newClass.prototype.execParent = function(methode, args) {
-                    this.__parent[methode].apply(this, args);
+                /**
+                 *
+                 * @param {string} parentClass
+                 * @param {string} method
+                 * @param {Array} args
+                 */
+                newClass.prototype.execFrom = function(parentClass, method, args) {
+                    for(let i = 0; i < this.__parents.length; i++)
+                    {
+                        if(this.__parents[i].className === parentClass)
+                        {
+                            this.__parents[i][method].apply(this, args);
+                            break;
+                        }
+                    }
                 };
 
-                /* return parent */
+                /**
+                 * execute a method as first recent parent
+                 * @param {string} method
+                 * @param {Array} args
+                 */
+                newClass.prototype.execParent = function(method, args) {
+                    this.__parents[this.__inheritLevel - 1][method].apply(this, args);
+                };
+
+                /**
+                 * return last recent parent
+                 * @returns {function(): *}
+                 */
                 newClass.prototype.getParent = function() {
-                    return this.__parent;
+                    return this.__parents[this.__inheritLevel - 1];
                 };
+
             }
+
 
             /**
              * return true if actual object or it's parents are an instance of the given class name
@@ -101,15 +151,15 @@ function oojsInit(global) {
                     return true;
                 }
 
-                let parent = this.__parent;
-
-                while(typeof parent !== 'undefined')
+                if(typeof this.__parents !== 'undefined')
                 {
-                    if(parent.className === className)
+                    for(let i = 0; i < this.__parents.length; i++)
                     {
-                        return true;
+                        if(this.__parents[i].className === className)
+                        {
+                            return true;
+                        }
                     }
-                    parent = parent.__parent;
                 }
 
                 return false;
@@ -140,10 +190,16 @@ function oojsInit(global) {
                 window[global].instances[this.className][this.objectId] = null;
                 delete window[global].instances[this.className][this.objectId];
 
-                if(typeof this.__parent !== 'undefined')
+                if(typeof this.__parents !== 'undefined')
                 {
-                    window[global].instances[this.__parent.className][this.objectId] = null;
-                    delete window[global].instances[this.__parent.className][this.objectId];
+                    for(let i = 0; i < this.__parents.length; i++)
+                    {
+                        window[global].instances[this.__parents[i].className][this.objectId] = null;
+                        delete window[global].instances[this.__parents[i].className][this.objectId];
+                    }
+
+                    this.__parents = null;
+
                 }
 
                 for(let member in this)
@@ -186,7 +242,7 @@ function oojsInit(global) {
             this[className] = newClass;
 
 
-            /* create empty container */
+            /* create empty container? */
             if(typeof this.instances[className] === 'undefined')
             {
                 this.instances[className] = {};
@@ -306,4 +362,5 @@ function oojsInit(global) {
         }
 
     };
+
 }
