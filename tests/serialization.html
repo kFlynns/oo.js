@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>oo.js - serialization</title>
+    <script src="../oo.js"></script>
+    <script>oojsInit('oojs');</script>
+</head>
+<body>
+<strong>Open console with F12.</strong>
+<script>
+
+    // definitions
+    oojs.create('Employee', {
+        name: null,
+        age: null,
+        __init: function(props) {
+            this.copyDataFrom(props);
+        },
+        getLabel: function() {
+            return 'Name: ' + this.name + ', age: ' + this.age + '.';
+        }
+    });
+
+    // creation
+    var bob = new oojs.Employee({
+        name: 'Bob',
+        age: 34
+    });
+
+
+    var data = bob.serialize();
+    bob.destroy();
+
+    var bobClone = oojs.deserialize(data);
+    console.log("Restored Bob:");
+    console.log(bobClone);
+
+
+</script>
+</body>
+</html>

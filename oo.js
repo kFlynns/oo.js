@@ -8,7 +8,7 @@
  */
 "use strict";
 /**
- * init the oojs-object under given identifier 'global'
+ * init the oo.js-object under given identifier 'global'
  * @param {string} global
  */
 function oojsInit(global) {
@@ -163,6 +163,14 @@ function oojsInit(global) {
                 }
 
                 return false;
+            };
+
+            /**
+             * serialize to string
+             * @returns {string}
+             */
+            newClass.prototype.serialize = function() {
+                return JSON.stringify(this);
             };
 
             /**
@@ -359,6 +367,23 @@ function oojsInit(global) {
                 }
             }
             return list;
+        },
+
+        /**
+         * load object from string
+         * @param {string} data
+         * @returns {any}
+         */
+        deserialize: function(data) {
+
+            let obj = JSON.parse(data);
+            var oojsObj = new oojs[obj.className]({
+                anonym: true
+            });
+            oojsObj.copyDataFrom(obj);
+
+            window[global].instances[oojsObj.className][oojsObj.objectId] = oojsObj;
+            return oojsObj;
         }
 
     };
